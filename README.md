@@ -27,6 +27,9 @@ source /opt/rh/devtoolset-9/enable
 命令： systemctl restart network
 ————————————————
 参考链接：https://blog.csdn.net/hnufun/article/details/106409560
+
+
+##升级内核：
 1、查看系统版本
 cat /etc/redhat-release
 2、查看当前内核版本
@@ -128,3 +131,4 @@ yum --disablerepo=\* --enablerepo=elrepo-kernel install -y kernel-lt-tools.x86_6
 
 # 查看已安装内核
 rpm -qa | grep kernel
+参考链接：https://zhuanlan.zhihu.com/p/368879345
