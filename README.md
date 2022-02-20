@@ -3,24 +3,38 @@
 原因： 内核默认使用centos的网卡驱动r8169,但实际网卡是r8168，驱动不匹配.
 解决方案：
 
-临时加载r8169驱动
-命令如下： 1. #rmmod r8169 2. #modprobe r8169 3. #systemctl restart network
-重启后会失效
+# 临时加载r8169驱动
+rmmod r8169
+modprobe r8169
+systemctl restart network
+yum install -y wget bzip2 uzip
+wget --no-check-certificate https://github.com/weigeloveu/kmod-r8168-8.049.02/archive/refs/tags/v8.049.02.zip
+# Install CentOS SCLo RH repository:
+yum install -y centos-release-scl-rh
+# Install devtoolset-9-gcc rpm package:
+yum install -y devtoolset-9-gcc
+source /opt/rh/devtoolset-9/enable
+yum --disablerepo=’*’ --enablerepo=elrepo-kernel install kernel-ml-devel
+yum remove kernel-headers 
+yum --disablerepo=’*’ --enablerepo=elrepo-kernel install kernel-ml-headers
+
 到官网下载匹配的最新的网卡驱动： https://www.realtek.com/zh-tw/component/zoo/category/network-interface-controllers-10-100-1000m-gigabit-ethernet-pci-express-software
 下载后解压，直接运行autorun.sh
+
 如果安装爆错/lib/modules/xxx/kernel/build No such file or directory, 安装kernel-devel包和kernel-headers包
+
 命令：
 
- # yum --disablerepo=’*’ --enablerepo=elrepo-kernel install kernel-ml-devel
- # yum remove kernel-headers 
- # yum --disablerepo=’*’ --enablerepo=elrepo-kernel install kernel-ml-headers
+yum --disablerepo=’*’ --enablerepo=elrepo-kernel install kernel-ml-devel
+yum remove kernel-headers 
+yum --disablerepo=’*’ --enablerepo=elrepo-kernel install kernel-ml-headers
  
 安装相关kernel包后再次运行autorun.sh,可能会爆错gcc : Command not found。 这时候安装gcc
 命令： 
-Install CentOS SCLo RH repository:
-# yum install centos-release-scl-rh
-Install devtoolset-9-gcc rpm package:
-# yum install devtoolset-9-gcc
+# Install CentOS SCLo RH repository:
+yum install -y centos-release-scl-rh
+# Install devtoolset-9-gcc rpm package:
+yum install -y devtoolset-9-gcc
 source /opt/rh/devtoolset-9/enable
 再次运行auutorun.sh,成功
 重启network 服务
